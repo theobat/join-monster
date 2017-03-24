@@ -161,7 +161,11 @@ function handleTable(sqlASTNode, queryASTNode, field, gqlType, namespace, grabMa
       console.warn('The `joinTable` is deprecated. Rename to `junctionTable`.')
     }
     const junctionTable = field.junctionTable || field.joinTable
-    sqlASTNode.junctionTable = junctionTable
+    if (typeof(junctionTable) === 'function') {
+      sqlASTNode.junctionTable = junctionTable(context)
+    } else {
+      sqlASTNode.junctionTable = junctionTable
+    }
     // we need to generate an alias for their junction table. we'll just take the alphanumeric characters from the junction table expression
     sqlASTNode.junctionTableAs = namespace.generate('table', junctionTable)
     // are they joining or batching?
