@@ -147,12 +147,12 @@ function handleTable(sqlASTNode, queryASTNode, field, gqlType, namespace, grabMa
     if (field.joinTable) {
       console.warn('The `joinTable` is deprecated. Rename to `junctionTable`.');
     }
-    const junctionTable = field.junctionTable || field.joinTable;
+    let junctionTable = field.junctionTable || field.joinTable;
     if (typeof junctionTable === 'function') {
-      sqlASTNode.junctionTable = junctionTable(context);
-    } else {
-      sqlASTNode.junctionTable = junctionTable;
+      junctionTable = junctionTable(context);
     }
+
+    sqlASTNode.junctionTable = junctionTable;
 
     sqlASTNode.junctionTableAs = namespace.generate('table', junctionTable);
 
